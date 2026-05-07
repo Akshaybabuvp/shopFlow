@@ -57,26 +57,25 @@ export default function Cart() {
   const promoDiscount = promoApplied ? subtotal * 0.1 : 0;
   const finalTotal = total - promoDiscount;
 
-  // ── Empty cart ──────────────────────────────────────────
   if (items.length === 0) {
     return (
-      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-[#faf9f6] px-6 text-center">
+      <div className="min-h-[80vh] flex flex-col items-center justify-center bg-[#faf9f6] px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="text-7xl mb-6">🛍️</div>
-          <h2 className="font-display text-4xl text-[#111] mb-3">
+          <div className="text-6xl mb-5">🛍️</div>
+          <h2 className="font-display text-3xl text-[#111] mb-3">
             Your cart is empty
           </h2>
-          <p className="text-gray-500 mb-8 max-w-sm">
+          <p className="text-gray-500 mb-7 max-w-xs text-sm">
             Looks like you haven't added anything yet. Discover our curated
             collection.
           </p>
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-[#111] text-white text-sm font-semibold rounded-full hover:bg-gray-800 transition-colors"
+            className="inline-flex items-center gap-2 px-7 py-3 bg-[#111] text-white text-sm font-semibold rounded-full hover:bg-gray-800 transition-colors"
           >
             Browse Products →
           </Link>
@@ -85,33 +84,31 @@ export default function Cart() {
     );
   }
 
-  // ── Filled cart ─────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#faf9f6]">
+    <div className="min-h-screen bg-[#faf9f6] overflow-x-hidden">
       {/* Header */}
-      <div className="bg-[#111] py-12">
-        <div className="max-w-7xl mx-auto px-6">
+      <div className="bg-[#111] py-10 md:py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <p className="text-amber-400 text-xs font-semibold tracking-[0.2em] uppercase mb-1">
             Review your order
           </p>
-          <h1 className="font-display text-4xl md:text-5xl text-white">
+          <h1 className="font-display text-3xl md:text-5xl text-white">
             Your <span className="italic">Cart</span>
-            <span className="ml-4 text-2xl font-sans font-normal text-gray-400 align-middle">
+            <span className="ml-3 text-xl font-sans font-normal text-gray-400 align-middle">
               ({cartCount} {cartCount === 1 ? 'item' : 'items'})
             </span>
           </h1>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-10">
-        <div className="grid lg:grid-cols-[1fr_360px] gap-10 items-start">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 md:py-10">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_340px] gap-6 lg:gap-10 items-start">
           {/* ── Left: Cart items ── */}
-          <div>
-            {/* Clear all */}
-            <div className="flex items-center justify-between mb-6">
+          <div className="w-full min-w-0">
+            <div className="flex items-center justify-between mb-5">
               <Link
                 to="/products"
-                className="flex items-center gap-2 text-sm text-gray-500 hover:text-[#111] transition-colors group"
+                className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#111] transition-colors group"
               >
                 <span className="group-hover:-translate-x-1 transition-transform inline-block">
                   ←
@@ -126,8 +123,7 @@ export default function Cart() {
               </button>
             </div>
 
-            {/* Items list */}
-            <div className="space-y-4">
+            <div className="space-y-3">
               <AnimatePresence initial={false}>
                 {items.map((item) => (
                   <motion.div
@@ -137,12 +133,12 @@ export default function Cart() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, x: 40, transition: { duration: 0.25 } }}
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                    className="flex gap-4 bg-white rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow duration-300"
+                    className="flex gap-3 bg-white rounded-2xl p-3 sm:p-4 shadow-sm"
                   >
                     {/* Image */}
                     <Link
                       to={`/products/${item.id}`}
-                      className="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden group"
+                      className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden group"
                     >
                       <img
                         src={item.image}
@@ -153,25 +149,25 @@ export default function Cart() {
 
                     {/* Detail */}
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-2">
-                        <div>
+                      <div className="flex items-start justify-between gap-1">
+                        <div className="min-w-0 flex-1">
                           <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
                             {item.category}
                           </p>
                           <Link
                             to={`/products/${item.id}`}
-                            className="font-semibold text-[#111] text-sm hover:text-amber-600 transition-colors line-clamp-1"
+                            className="font-semibold text-[#111] text-sm hover:text-amber-600 transition-colors line-clamp-1 block"
                           >
                             {item.name}
                           </Link>
                           {item.color && (
-                            <div className="flex items-center gap-1.5 mt-1">
+                            <div className="flex items-center gap-1 mt-1">
                               <span
-                                className="w-3 h-3 rounded-full border border-gray-200 inline-block"
+                                className="w-2.5 h-2.5 rounded-full border border-gray-200 inline-block flex-shrink-0"
                                 style={{ background: item.color }}
                               />
                               <span className="text-[10px] text-gray-400">
-                                Colour selected
+                                Colour
                               </span>
                             </div>
                           )}
@@ -180,11 +176,11 @@ export default function Cart() {
                         <button
                           onClick={() => removeItem(item.id, item.color)}
                           aria-label="Remove item"
-                          className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0 p-1"
+                          className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0 p-1 -mt-1"
                         >
                           <svg
-                            width="16"
-                            height="16"
+                            width="15"
+                            height="15"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="1.8"
@@ -199,7 +195,7 @@ export default function Cart() {
                       </div>
 
                       {/* Price + stepper */}
-                      <div className="flex items-center justify-between mt-3">
+                      <div className="flex items-center justify-between mt-2.5">
                         <QuantityStepper
                           value={item.qty}
                           onChange={(qty) => {
@@ -208,11 +204,11 @@ export default function Cart() {
                           }}
                         />
                         <div className="text-right">
-                          <div className="font-semibold text-[#111] text-base">
+                          <div className="font-semibold text-[#111] text-sm sm:text-base">
                             ${(item.price * item.qty).toFixed(2)}
                           </div>
                           {item.qty > 1 && (
-                            <div className="text-[11px] text-gray-400">
+                            <div className="text-[10px] text-gray-400">
                               ${item.price.toFixed(2)} each
                             </div>
                           )}
@@ -226,12 +222,14 @@ export default function Cart() {
           </div>
 
           {/* ── Right: Order summary ── */}
-          <div className="lg:sticky lg:top-24">
-            <div className="bg-[#111] rounded-3xl p-6 text-white">
-              <h2 className="font-display text-2xl mb-6">Order Summary</h2>
+          <div className="w-full min-w-0 lg:sticky lg:top-24">
+            <div className="bg-[#111] rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white w-full overflow-hidden">
+              <h2 className="font-display text-xl sm:text-2xl mb-5">
+                Order Summary
+              </h2>
 
               {/* Line items */}
-              <div className="space-y-3 text-sm mb-6">
+              <div className="space-y-2.5 text-sm mb-5">
                 <div className="flex justify-between text-gray-400">
                   <span>Subtotal ({cartCount} items)</span>
                   <span className="text-white">${subtotal.toFixed(2)}</span>
@@ -258,21 +256,21 @@ export default function Cart() {
                     animate={{ opacity: 1, y: 0 }}
                     className="flex justify-between text-green-400"
                   >
-                    <span>Promo (SHOPFLOW10)</span>
+                    <span className="text-xs">Promo (SHOPFLOW10)</span>
                     <span>−${promoDiscount.toFixed(2)}</span>
                   </motion.div>
                 )}
               </div>
 
-              {/* Divider */}
-              <div className="border-t border-white/10 pt-4 mb-6">
+              {/* Total */}
+              <div className="border-t border-white/10 pt-4 mb-5">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-lg font-semibold">Total</span>
+                  <span className="text-base font-semibold">Total</span>
                   <motion.span
                     key={finalTotal.toFixed(2)}
                     initial={{ scale: 0.9, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="text-2xl font-bold text-amber-400"
+                    className="text-xl sm:text-2xl font-bold text-amber-400"
                   >
                     ${finalTotal.toFixed(2)}
                   </motion.span>
@@ -285,7 +283,7 @@ export default function Cart() {
               </div>
 
               {/* Promo code */}
-              <div className="mb-6">
+              <div className="mb-5">
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -293,11 +291,11 @@ export default function Cart() {
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && applyPromo()}
-                    className="flex-1 bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/60 transition-colors"
+                    className="flex-1 min-w-0 bg-white/10 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-400/60 transition-colors"
                   />
                   <button
                     onClick={applyPromo}
-                    className="px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-sm font-medium transition-colors"
+                    className="flex-shrink-0 px-3 sm:px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/10 rounded-xl text-xs sm:text-sm font-medium transition-colors whitespace-nowrap"
                   >
                     Apply
                   </button>
@@ -330,7 +328,7 @@ export default function Cart() {
               <motion.button
                 whileTap={{ scale: 0.97 }}
                 onClick={() => navigate('/checkout')}
-                className="w-full bg-amber-400 text-black py-4 rounded-2xl text-sm font-bold hover:bg-amber-300 transition-colors tracking-wide mb-3"
+                className="w-full bg-amber-400 text-black py-3.5 sm:py-4 rounded-2xl text-sm font-bold hover:bg-amber-300 transition-colors tracking-wide mb-3"
               >
                 Proceed to Checkout →
               </motion.button>
@@ -338,8 +336,8 @@ export default function Cart() {
               {/* Secure badge */}
               <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
                 <svg
-                  width="12"
-                  height="12"
+                  width="11"
+                  height="11"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.8"
@@ -352,7 +350,7 @@ export default function Cart() {
             </div>
 
             {/* Payment logos */}
-            <div className="mt-4 flex items-center justify-center gap-3 opacity-50">
+            <div className="mt-3 flex items-center justify-center flex-wrap gap-2 opacity-50 px-1">
               {['Visa', 'MC', 'Amex', 'UPI', 'Razorpay'].map((p) => (
                 <span
                   key={p}

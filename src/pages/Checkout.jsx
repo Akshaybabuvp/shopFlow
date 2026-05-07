@@ -7,20 +7,19 @@ import { useRazorpay } from '../hooks/useRazorpay';
 import FormField from '../components/FormField';
 import PaymentReview from '../components/PaymentReview';
 
-// ── Step indicator ───────────────────────────────────────
 const STEPS = ['Contact', 'Shipping', 'Payment', 'Review'];
 
 function StepIndicator({ current }) {
   return (
-    <div className="flex items-center gap-0 mb-10">
+    <div className="flex items-center mb-8 overflow-x-auto pb-1">
       {STEPS.map((label, i) => {
         const done = i < current;
         const active = i === current;
         return (
-          <div key={label} className="flex items-center">
+          <div key={label} className="flex items-center flex-shrink-0">
             <div className="flex flex-col items-center">
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-300
+                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-300
                 ${
                   done
                     ? 'bg-[#111] border-[#111] text-white'
@@ -32,7 +31,7 @@ function StepIndicator({ current }) {
                 {done ? '✓' : i + 1}
               </div>
               <span
-                className={`text-[10px] font-medium mt-1 tracking-wide transition-colors duration-300
+                className={`text-[9px] sm:text-[10px] font-medium mt-1 tracking-wide transition-colors duration-300 whitespace-nowrap
                 ${active ? 'text-[#111]' : done ? 'text-gray-500' : 'text-gray-300'}`}
               >
                 {label}
@@ -40,7 +39,7 @@ function StepIndicator({ current }) {
             </div>
             {i < STEPS.length - 1 && (
               <div
-                className={`h-[2px] w-12 md:w-16 mx-1 mb-4 rounded-full transition-all duration-500 ${i < current ? 'bg-[#111]' : 'bg-gray-200'}`}
+                className={`h-[2px] w-8 sm:w-12 md:w-16 mx-1 mb-4 rounded-full transition-all duration-500 flex-shrink-0 ${i < current ? 'bg-[#111]' : 'bg-gray-200'}`}
               />
             )}
           </div>
@@ -52,9 +51,9 @@ function StepIndicator({ current }) {
 
 function slideVariants(dir) {
   return {
-    initial: { opacity: 0, x: dir * 40 },
+    initial: { opacity: 0, x: dir * 30 },
     animate: { opacity: 1, x: 0 },
-    exit: { opacity: 0, x: dir * -40 },
+    exit: { opacity: 0, x: dir * -30 },
   };
 }
 
@@ -90,7 +89,6 @@ function validatePayment(f) {
   return e;
 }
 
-// ── Confirmation screen ──────────────────────────────────
 function ConfirmationScreen({
   contact,
   shippingAddr,
@@ -99,7 +97,7 @@ function ConfirmationScreen({
   orderResult,
 }) {
   return (
-    <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center px-6">
+    <div className="min-h-screen bg-[#0f0f0f] flex items-center justify-center px-4">
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -115,11 +113,11 @@ function ConfirmationScreen({
             stiffness: 300,
             damping: 20,
           }}
-          className="w-24 h-24 bg-amber-400 rounded-full flex items-center justify-center mx-auto mb-8"
+          className="w-20 h-20 sm:w-24 sm:h-24 bg-amber-400 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8"
         >
           <svg
-            width="40"
-            height="40"
+            width="36"
+            height="36"
             fill="none"
             stroke="#111"
             strokeWidth="3"
@@ -141,31 +139,31 @@ function ConfirmationScreen({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.5 }}
         >
-          <h1 className="font-display text-4xl text-white mb-2">
+          <h1 className="font-display text-3xl sm:text-4xl text-white mb-2">
             Order Confirmed!
           </h1>
-          <p className="text-gray-400 mb-5">
+          <p className="text-gray-400 mb-5 text-sm sm:text-base">
             Thank you, {contact.firstName}! Your order has been placed and
             payment received.
           </p>
 
-          <div className="inline-block bg-white/10 rounded-xl px-5 py-2.5 mb-6">
+          <div className="inline-block bg-white/10 rounded-xl px-4 py-2 mb-4">
             <span className="text-gray-400 text-sm">Order ID: </span>
-            <span className="text-amber-400 font-bold tracking-widest">
+            <span className="text-amber-400 font-bold tracking-widest text-sm">
               {orderResult.orderNumber}
             </span>
           </div>
 
           {orderResult.paymentId && (
-            <div className="inline-block bg-white/10 rounded-xl px-5 py-2.5 mb-6 ml-2">
+            <div className="block bg-white/10 rounded-xl px-4 py-2 mb-4">
               <span className="text-gray-400 text-sm">Payment ID: </span>
-              <span className="text-green-400 font-mono text-xs">
+              <span className="text-green-400 font-mono text-xs break-all">
                 {orderResult.paymentId}
               </span>
             </div>
           )}
 
-          <div className="bg-white/5 rounded-2xl p-5 mb-8 text-left space-y-3">
+          <div className="bg-white/5 rounded-2xl p-4 mb-6 text-left space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-gray-500">Delivering to</span>
               <span className="text-white font-medium">
@@ -216,7 +214,6 @@ function ConfirmationScreen({
   );
 }
 
-// ── Main Checkout ────────────────────────────────────────
 export default function Checkout() {
   const { items, subtotal, shipping, tax, total, clearCart } = useCart();
   const { user } = useAuth();
@@ -326,7 +323,7 @@ export default function Checkout() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-[70vh] flex flex-col items-center justify-center bg-[#faf9f6] gap-4">
+      <div className="min-h-[70vh] flex flex-col items-center justify-center bg-[#faf9f6] gap-4 px-4">
         <h2 className="font-display text-3xl text-[#111]">
           Your cart is empty
         </h2>
@@ -338,20 +335,23 @@ export default function Checkout() {
   }
 
   return (
-    <div className="min-h-screen bg-[#faf9f6]">
-      <div className="bg-[#111] py-12">
-        <div className="max-w-6xl mx-auto px-6">
+    <div className="min-h-screen bg-[#faf9f6] overflow-x-hidden">
+      {/* Header */}
+      <div className="bg-[#111] py-10 md:py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <p className="text-amber-400 text-xs font-semibold tracking-[0.2em] uppercase mb-1">
             Almost there
           </p>
-          <h1 className="font-display text-4xl text-white">Checkout</h1>
+          <h1 className="font-display text-3xl md:text-4xl text-white">
+            Checkout
+          </h1>
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        <div className="grid lg:grid-cols-[1fr_340px] gap-10 items-start">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 md:py-10">
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_320px] gap-6 lg:gap-10 items-start">
           {/* ── Left: Form ── */}
-          <div>
+          <div className="w-full min-w-0">
             <StepIndicator current={step} />
 
             {/* Payment error banner */}
@@ -361,10 +361,10 @@ export default function Checkout() {
                   initial={{ opacity: 0, y: -8 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="bg-red-50 border border-red-200 rounded-2xl p-4 mb-5 flex items-start gap-3"
+                  className="bg-red-50 border border-red-200 rounded-2xl p-3 sm:p-4 mb-4 flex items-start gap-3"
                 >
                   <span className="text-red-500 text-lg flex-shrink-0">⚠</span>
-                  <div>
+                  <div className="flex-1 min-w-0">
                     <p className="text-red-700 text-sm font-medium">
                       Payment Failed
                     </p>
@@ -374,7 +374,7 @@ export default function Checkout() {
                   </div>
                   <button
                     onClick={() => setPaymentError('')}
-                    className="ml-auto text-red-300 hover:text-red-500 text-lg leading-none"
+                    className="ml-auto text-red-300 hover:text-red-500 text-xl leading-none flex-shrink-0"
                   >
                     ×
                   </button>
@@ -382,9 +382,9 @@ export default function Checkout() {
               )}
             </AnimatePresence>
 
-            <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-sm overflow-hidden">
               <AnimatePresence mode="wait" custom={dir}>
-                {/* ── Step 0: Contact ── */}
+                {/* Step 0: Contact */}
                 {step === 0 && (
                   <motion.div
                     key="contact"
@@ -392,12 +392,12 @@ export default function Checkout() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <h2 className="font-display text-2xl text-[#111] mb-6">
+                    <h2 className="font-display text-xl sm:text-2xl text-[#111] mb-5">
                       Contact Information
                     </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <FormField
                         label="First Name"
                         id="firstName"
@@ -437,7 +437,7 @@ export default function Checkout() {
                   </motion.div>
                 )}
 
-                {/* ── Step 1: Shipping ── */}
+                {/* Step 1: Shipping */}
                 {step === 1 && (
                   <motion.div
                     key="shipping"
@@ -445,12 +445,12 @@ export default function Checkout() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <h2 className="font-display text-2xl text-[#111] mb-6">
+                    <h2 className="font-display text-xl sm:text-2xl text-[#111] mb-5">
                       Shipping Address
                     </h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                       <div className="sm:col-span-2">
                         <FormField
                           label="Street Address"
@@ -519,11 +519,11 @@ export default function Checkout() {
                       </div>
                     </div>
 
-                    <div className="mt-6">
+                    <div className="mt-5">
                       <h3 className="text-sm font-semibold text-[#111] mb-3">
                         Shipping Method
                       </h3>
-                      <div className="space-y-2.5">
+                      <div className="space-y-2">
                         {[
                           {
                             id: 'standard',
@@ -540,14 +540,14 @@ export default function Checkout() {
                         ].map((opt) => (
                           <label
                             key={opt.id}
-                            className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3.5 cursor-pointer hover:border-amber-400 transition-colors has-[:checked]:border-amber-400 has-[:checked]:bg-amber-50"
+                            className="flex items-center justify-between border border-gray-200 rounded-xl px-3 sm:px-4 py-3 cursor-pointer hover:border-amber-400 transition-colors has-[:checked]:border-amber-400 has-[:checked]:bg-amber-50"
                           >
                             <div className="flex items-center gap-3">
                               <input
                                 type="radio"
                                 name="shipping"
                                 defaultChecked={opt.id === 'standard'}
-                                className="accent-amber-500"
+                                className="accent-amber-500 flex-shrink-0"
                               />
                               <div>
                                 <div className="text-sm font-medium text-[#111]">
@@ -558,7 +558,7 @@ export default function Checkout() {
                                 </div>
                               </div>
                             </div>
-                            <span className="text-sm font-semibold text-[#111]">
+                            <span className="text-sm font-semibold text-[#111] flex-shrink-0 ml-2">
                               {opt.price}
                             </span>
                           </label>
@@ -568,7 +568,7 @@ export default function Checkout() {
                   </motion.div>
                 )}
 
-                {/* ── Step 2: Payment ── */}
+                {/* Step 2: Payment */}
                 {step === 2 && (
                   <motion.div
                     key="payment"
@@ -576,30 +576,30 @@ export default function Checkout() {
                     initial="initial"
                     animate="animate"
                     exit="exit"
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <h2 className="font-display text-2xl text-[#111] mb-6">
+                    <h2 className="font-display text-xl sm:text-2xl text-[#111] mb-5">
                       Payment Method
                     </h2>
-                    <div className="grid grid-cols-3 gap-3 mb-6">
+                    <div className="grid grid-cols-3 gap-2 sm:gap-3 mb-5">
                       {[
                         { id: 'razorpay', label: 'Razorpay', icon: '⚡' },
                         { id: 'card', label: 'Card', icon: '💳' },
-                        { id: 'cod', label: 'Cash on Delivery', icon: '📦' },
+                        { id: 'cod', label: 'COD', icon: '📦' },
                       ].map((m) => (
                         <button
                           key={m.id}
                           onClick={() =>
                             setPayment((p) => ({ ...p, method: m.id }))
                           }
-                          className={`flex flex-col items-center gap-1.5 py-3.5 px-3 border-2 rounded-2xl text-xs font-medium transition-all duration-200
+                          className={`flex flex-col items-center gap-1 py-3 px-2 border-2 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-medium transition-all duration-200
                             ${
                               payment.method === m.id
                                 ? 'border-amber-400 bg-amber-50 text-amber-700'
                                 : 'border-gray-200 text-gray-500 hover:border-gray-300'
                             }`}
                         >
-                          <span className="text-xl">{m.icon}</span>
+                          <span className="text-lg sm:text-xl">{m.icon}</span>
                           {m.label}
                         </button>
                       ))}
@@ -613,7 +613,7 @@ export default function Checkout() {
                           exit={{ opacity: 0, height: 0 }}
                           className="overflow-hidden"
                         >
-                          <div className="space-y-4 pt-2">
+                          <div className="space-y-3 pt-2">
                             <FormField
                               label="Card Number"
                               id="cardNumber"
@@ -641,7 +641,7 @@ export default function Checkout() {
                               autoComplete="cc-name"
                               {...field(payment, setPayment, 'cardName')}
                             />
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-3">
                               <FormField
                                 label="Expiry (MM/YY)"
                                 id="expiry"
@@ -681,11 +681,11 @@ export default function Checkout() {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-4 text-sm text-blue-700"
+                        className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-3 sm:p-4 text-sm text-blue-700"
                       >
-                        <span className="text-lg">⚡</span>
+                        <span className="text-lg flex-shrink-0">⚡</span>
                         <div>
-                          <div className="font-semibold mb-0.5">
+                          <div className="font-semibold mb-0.5 text-sm">
                             Pay via Razorpay
                           </div>
                           <div className="text-xs text-blue-500">
@@ -700,11 +700,11 @@ export default function Checkout() {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="flex items-start gap-3 bg-green-50 border border-green-100 rounded-2xl p-4 text-sm text-green-700"
+                        className="flex items-start gap-3 bg-green-50 border border-green-100 rounded-2xl p-3 sm:p-4 text-sm text-green-700"
                       >
-                        <span className="text-lg">📦</span>
+                        <span className="text-lg flex-shrink-0">📦</span>
                         <div>
-                          <div className="font-semibold mb-0.5">
+                          <div className="font-semibold mb-0.5 text-sm">
                             Cash on Delivery
                           </div>
                           <div className="text-xs text-green-600">
@@ -717,7 +717,7 @@ export default function Checkout() {
                   </motion.div>
                 )}
 
-                {/* ── Step 3: Review ── */}
+                {/* Step 3: Review */}
                 {step === 3 && (
                   <PaymentReview
                     contact={contact}
@@ -735,13 +735,13 @@ export default function Checkout() {
                 )}
               </AnimatePresence>
 
-              {/* Navigation (steps 0–2 only) */}
+              {/* Navigation */}
               {step < 3 && (
-                <div className="flex items-center justify-between mt-8 pt-6 border-t border-gray-100">
+                <div className="flex items-center justify-between mt-6 pt-5 border-t border-gray-100">
                   {step > 0 ? (
                     <button
                       onClick={goBack}
-                      className="flex items-center gap-2 text-sm text-gray-500 hover:text-[#111] transition-colors group"
+                      className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#111] transition-colors group"
                     >
                       <span className="group-hover:-translate-x-1 transition-transform inline-block">
                         ←
@@ -751,7 +751,7 @@ export default function Checkout() {
                   ) : (
                     <Link
                       to="/cart"
-                      className="flex items-center gap-2 text-sm text-gray-500 hover:text-[#111] transition-colors group"
+                      className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#111] transition-colors group"
                     >
                       <span className="group-hover:-translate-x-1 transition-transform inline-block">
                         ←
@@ -762,7 +762,7 @@ export default function Checkout() {
                   <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={goNext}
-                    className="px-8 py-3.5 bg-[#111] text-white text-sm font-semibold rounded-full hover:bg-gray-800 transition-colors tracking-wide"
+                    className="px-6 sm:px-8 py-3 sm:py-3.5 bg-[#111] text-white text-sm font-semibold rounded-full hover:bg-gray-800 transition-colors tracking-wide"
                   >
                     {step === 2 ? 'Review Order →' : 'Continue →'}
                   </motion.button>
@@ -772,22 +772,26 @@ export default function Checkout() {
           </div>
 
           {/* ── Right: Order summary ── */}
-          <div className="lg:sticky lg:top-24">
-            <div className="bg-[#111] rounded-3xl p-6 text-white">
-              <h2 className="font-display text-xl mb-5">Order Summary</h2>
-              <div className="space-y-4 mb-5 max-h-52 overflow-y-auto">
+          <div className="w-full min-w-0 lg:sticky lg:top-24">
+            <div className="bg-[#111] rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white overflow-hidden">
+              <h2 className="font-display text-lg sm:text-xl mb-4">
+                Order Summary
+              </h2>
+
+              {/* Items */}
+              <div className="space-y-3 mb-4 max-h-44 overflow-y-auto">
                 {items.map((item) => (
                   <div
                     key={`${item.id}-${item.color}`}
-                    className="flex gap-3 items-center"
+                    className="flex gap-2.5 items-center"
                   >
                     <div className="relative flex-shrink-0">
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-12 h-12 object-cover rounded-xl"
+                        className="w-10 h-10 object-cover rounded-lg"
                       />
-                      <span className="absolute -top-1.5 -right-1.5 bg-amber-400 text-black text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                      <span className="absolute -top-1 -right-1 bg-amber-400 text-black text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
                         {item.qty}
                       </span>
                     </div>
@@ -799,13 +803,15 @@ export default function Checkout() {
                         {item.category}
                       </p>
                     </div>
-                    <span className="text-white text-sm font-semibold">
+                    <span className="text-white text-xs font-semibold flex-shrink-0">
                       ${(item.price * item.qty).toFixed(2)}
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="border-t border-white/10 pt-4 space-y-2.5 text-sm mb-5">
+
+              {/* Totals */}
+              <div className="border-t border-white/10 pt-3 space-y-2 text-sm mb-4">
                 <div className="flex justify-between text-gray-400">
                   <span>Subtotal</span>
                   <span className="text-white">${subtotal.toFixed(2)}</span>
@@ -823,16 +829,19 @@ export default function Checkout() {
                   <span className="text-white">${tax.toFixed(2)}</span>
                 </div>
               </div>
-              <div className="border-t border-white/10 pt-4 flex justify-between items-baseline mb-4">
-                <span className="text-white font-semibold">Total</span>
-                <span className="text-amber-400 text-2xl font-bold">
+
+              <div className="border-t border-white/10 pt-3 flex justify-between items-baseline mb-3">
+                <span className="text-white font-semibold text-sm">Total</span>
+                <span className="text-amber-400 text-xl font-bold">
                   ${total.toFixed(2)}
                 </span>
               </div>
-              <p className="text-gray-600 text-[10px] text-center">
+
+              <p className="text-gray-600 text-[10px] text-center mb-3 leading-tight">
                 ≈ ₹{(total * 83).toFixed(0)} INR · charged in INR via Razorpay
               </p>
-              <div className="mt-4 flex items-center justify-center gap-1.5 text-gray-600 text-xs">
+
+              <div className="flex items-center justify-center gap-1.5 text-gray-600 text-xs">
                 <svg
                   width="11"
                   height="11"
@@ -846,7 +855,8 @@ export default function Checkout() {
                 256-bit SSL secured checkout
               </div>
             </div>
-            <div className="mt-4 bg-white rounded-2xl p-4 border border-gray-100 text-xs text-gray-500 text-center">
+
+            <div className="mt-3 bg-white rounded-xl p-3 border border-gray-100 text-xs text-gray-500 text-center">
               Step {step + 1} of {STEPS.length} — {STEPS[step]}
             </div>
           </div>
