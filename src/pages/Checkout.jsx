@@ -1,3 +1,4 @@
+// src/pages/Checkout.jsx — COMPLETE FILE — replace entirely
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,37 +10,38 @@ import PaymentReview from '../components/PaymentReview';
 
 const STEPS = ['Contact', 'Shipping', 'Payment', 'Review'];
 
+// ── Step indicator ──────────────────────────────────────
 function StepIndicator({ current }) {
   return (
-    <div className="flex items-center mb-8 overflow-x-auto pb-1">
+    <div className="flex items-center mb-8 w-full overflow-hidden">
       {STEPS.map((label, i) => {
         const done = i < current;
         const active = i === current;
         return (
-          <div key={label} className="flex items-center flex-shrink-0">
-            <div className="flex flex-col items-center">
+          <div key={label} className="flex items-center flex-1 last:flex-none">
+            <div className="flex flex-col items-center flex-shrink-0">
               <div
-                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all duration-300
-                ${
-                  done
-                    ? 'bg-[#111] border-[#111] text-white'
-                    : active
-                      ? 'bg-white border-amber-400 text-amber-600'
-                      : 'bg-white border-gray-200 text-gray-300'
-                }`}
+                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[11px] sm:text-xs font-bold border-2 transition-all duration-300
+                  ${
+                    done
+                      ? 'bg-[#111] border-[#111] text-white'
+                      : active
+                        ? 'bg-white border-amber-400 text-amber-600'
+                        : 'bg-white border-gray-200 text-gray-300'
+                  }`}
               >
                 {done ? '✓' : i + 1}
               </div>
               <span
-                className={`text-[9px] sm:text-[10px] font-medium mt-1 tracking-wide transition-colors duration-300 whitespace-nowrap
-                ${active ? 'text-[#111]' : done ? 'text-gray-500' : 'text-gray-300'}`}
+                className={`text-[9px] sm:text-[10px] font-medium mt-1 transition-colors duration-300 whitespace-nowrap
+                  ${active ? 'text-[#111]' : done ? 'text-gray-500' : 'text-gray-300'}`}
               >
                 {label}
               </span>
             </div>
             {i < STEPS.length - 1 && (
               <div
-                className={`h-[2px] w-8 sm:w-12 md:w-16 mx-1 mb-4 rounded-full transition-all duration-500 flex-shrink-0 ${i < current ? 'bg-[#111]' : 'bg-gray-200'}`}
+                className={`flex-1 h-[2px] mx-1 mb-4 rounded-full transition-all duration-500 ${i < current ? 'bg-[#111]' : 'bg-gray-200'}`}
               />
             )}
           </div>
@@ -89,6 +91,7 @@ function validatePayment(f) {
   return e;
 }
 
+// ── Confirmation screen ─────────────────────────────────
 function ConfirmationScreen({
   contact,
   shippingAddr,
@@ -113,7 +116,7 @@ function ConfirmationScreen({
             stiffness: 300,
             damping: 20,
           }}
-          className="w-20 h-20 sm:w-24 sm:h-24 bg-amber-400 rounded-full flex items-center justify-center mx-auto mb-6 sm:mb-8"
+          className="w-20 h-20 sm:w-24 sm:h-24 bg-amber-400 rounded-full flex items-center justify-center mx-auto mb-7"
         >
           <svg
             width="36"
@@ -147,7 +150,7 @@ function ConfirmationScreen({
             payment received.
           </p>
 
-          <div className="inline-block bg-white/10 rounded-xl px-4 py-2 mb-4">
+          <div className="bg-white/10 rounded-xl px-4 py-2.5 mb-4 inline-block">
             <span className="text-gray-400 text-sm">Order ID: </span>
             <span className="text-amber-400 font-bold tracking-widest text-sm">
               {orderResult.orderNumber}
@@ -155,7 +158,7 @@ function ConfirmationScreen({
           </div>
 
           {orderResult.paymentId && (
-            <div className="block bg-white/10 rounded-xl px-4 py-2 mb-4">
+            <div className="bg-white/10 rounded-xl px-4 py-2.5 mb-4 block mx-4">
               <span className="text-gray-400 text-sm">Payment ID: </span>
               <span className="text-green-400 font-mono text-xs break-all">
                 {orderResult.paymentId}
@@ -163,7 +166,7 @@ function ConfirmationScreen({
             </div>
           )}
 
-          <div className="bg-white/5 rounded-2xl p-4 mb-6 text-left space-y-3">
+          <div className="bg-white/5 rounded-2xl p-4 mb-6 text-left space-y-3 mx-0">
             <div className="flex justify-between text-sm">
               <span className="text-gray-500">Delivering to</span>
               <span className="text-white font-medium">
@@ -214,11 +217,12 @@ function ConfirmationScreen({
   );
 }
 
+// ── Main Checkout ───────────────────────────────────────
 export default function Checkout() {
   const { items, subtotal, shipping, tax, total, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
-  const { initiatePayment, processing, error: payError } = useRazorpay();
+  const { initiatePayment, processing } = useRazorpay();
 
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState(1);
@@ -349,12 +353,13 @@ export default function Checkout() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 md:py-10">
-        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_320px] gap-6 lg:gap-10 items-start">
-          {/* ── Left: Form ── */}
+        {/* Stack on mobile, side-by-side on lg+ */}
+        <div className="flex flex-col lg:grid lg:grid-cols-[1fr_300px] gap-6 lg:gap-10 items-start">
+          {/* ── LEFT: Multi-step form ── */}
           <div className="w-full min-w-0">
             <StepIndicator current={step} />
 
-            {/* Payment error banner */}
+            {/* Payment error */}
             <AnimatePresence>
               {paymentError && (
                 <motion.div
@@ -368,13 +373,13 @@ export default function Checkout() {
                     <p className="text-red-700 text-sm font-medium">
                       Payment Failed
                     </p>
-                    <p className="text-red-500 text-xs mt-0.5">
+                    <p className="text-red-500 text-xs mt-0.5 break-words">
                       {paymentError}
                     </p>
                   </div>
                   <button
                     onClick={() => setPaymentError('')}
-                    className="ml-auto text-red-300 hover:text-red-500 text-xl leading-none flex-shrink-0"
+                    className="text-red-300 hover:text-red-500 text-xl leading-none flex-shrink-0"
                   >
                     ×
                   </button>
@@ -384,7 +389,7 @@ export default function Checkout() {
 
             <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-sm overflow-hidden">
               <AnimatePresence mode="wait" custom={dir}>
-                {/* Step 0: Contact */}
+                {/* STEP 0: Contact */}
                 {step === 0 && (
                   <motion.div
                     key="contact"
@@ -437,7 +442,7 @@ export default function Checkout() {
                   </motion.div>
                 )}
 
-                {/* Step 1: Shipping */}
+                {/* STEP 1: Shipping */}
                 {step === 1 && (
                   <motion.div
                     key="shipping"
@@ -523,7 +528,7 @@ export default function Checkout() {
                       <h3 className="text-sm font-semibold text-[#111] mb-3">
                         Shipping Method
                       </h3>
-                      <div className="space-y-2">
+                      <div className="space-y-2.5">
                         {[
                           {
                             id: 'standard',
@@ -558,7 +563,7 @@ export default function Checkout() {
                                 </div>
                               </div>
                             </div>
-                            <span className="text-sm font-semibold text-[#111] flex-shrink-0 ml-2">
+                            <span className="text-sm font-semibold text-[#111] ml-2 flex-shrink-0">
                               {opt.price}
                             </span>
                           </label>
@@ -568,7 +573,7 @@ export default function Checkout() {
                   </motion.div>
                 )}
 
-                {/* Step 2: Payment */}
+                {/* STEP 2: Payment */}
                 {step === 2 && (
                   <motion.div
                     key="payment"
@@ -592,7 +597,7 @@ export default function Checkout() {
                           onClick={() =>
                             setPayment((p) => ({ ...p, method: m.id }))
                           }
-                          className={`flex flex-col items-center gap-1 py-3 px-2 border-2 rounded-xl sm:rounded-2xl text-[10px] sm:text-xs font-medium transition-all duration-200
+                          className={`flex flex-col items-center gap-1 py-3 px-2 border-2 rounded-xl text-[10px] sm:text-xs font-medium transition-all duration-200
                             ${
                               payment.method === m.id
                                 ? 'border-amber-400 bg-amber-50 text-amber-700'
@@ -681,7 +686,7 @@ export default function Checkout() {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-3 sm:p-4 text-sm text-blue-700"
+                        className="flex items-start gap-3 bg-blue-50 border border-blue-100 rounded-2xl p-3 sm:p-4 text-blue-700"
                       >
                         <span className="text-lg flex-shrink-0">⚡</span>
                         <div>
@@ -689,8 +694,8 @@ export default function Checkout() {
                             Pay via Razorpay
                           </div>
                           <div className="text-xs text-blue-500">
-                            UPI, cards, net banking, and wallets accepted.
-                            Amount will be charged in INR.
+                            UPI, cards, net banking, and wallets. Charged in
+                            INR.
                           </div>
                         </div>
                       </motion.div>
@@ -700,7 +705,7 @@ export default function Checkout() {
                       <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="flex items-start gap-3 bg-green-50 border border-green-100 rounded-2xl p-3 sm:p-4 text-sm text-green-700"
+                        className="flex items-start gap-3 bg-green-50 border border-green-100 rounded-2xl p-3 sm:p-4 text-green-700"
                       >
                         <span className="text-lg flex-shrink-0">📦</span>
                         <div>
@@ -717,7 +722,7 @@ export default function Checkout() {
                   </motion.div>
                 )}
 
-                {/* Step 3: Review */}
+                {/* STEP 3: Review */}
                 {step === 3 && (
                   <PaymentReview
                     contact={contact}
@@ -735,7 +740,7 @@ export default function Checkout() {
                 )}
               </AnimatePresence>
 
-              {/* Navigation */}
+              {/* Nav buttons (steps 0–2) */}
               {step < 3 && (
                 <div className="flex items-center justify-between mt-6 pt-5 border-t border-gray-100">
                   {step > 0 ? (
@@ -771,19 +776,19 @@ export default function Checkout() {
             </div>
           </div>
 
-          {/* ── Right: Order summary ── */}
+          {/* ── RIGHT: Order Summary ── */}
           <div className="w-full min-w-0 lg:sticky lg:top-24">
-            <div className="bg-[#111] rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white overflow-hidden">
+            <div className="bg-[#111] rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white overflow-hidden">
               <h2 className="font-display text-lg sm:text-xl mb-4">
                 Order Summary
               </h2>
 
-              {/* Items */}
-              <div className="space-y-3 mb-4 max-h-44 overflow-y-auto">
+              {/* Item thumbnails */}
+              <div className="space-y-3 mb-4 max-h-40 overflow-y-auto">
                 {items.map((item) => (
                   <div
                     key={`${item.id}-${item.color}`}
-                    className="flex gap-2.5 items-center"
+                    className="flex gap-2.5 items-center min-w-0"
                   >
                     <div className="relative flex-shrink-0">
                       <img
@@ -803,14 +808,14 @@ export default function Checkout() {
                         {item.category}
                       </p>
                     </div>
-                    <span className="text-white text-xs font-semibold flex-shrink-0">
+                    <span className="text-white text-xs font-semibold flex-shrink-0 ml-1">
                       ${(item.price * item.qty).toFixed(2)}
                     </span>
                   </div>
                 ))}
               </div>
 
-              {/* Totals */}
+              {/* Price lines */}
               <div className="border-t border-white/10 pt-3 space-y-2 text-sm mb-4">
                 <div className="flex justify-between text-gray-400">
                   <span>Subtotal</span>
@@ -830,6 +835,7 @@ export default function Checkout() {
                 </div>
               </div>
 
+              {/* Total */}
               <div className="border-t border-white/10 pt-3 flex justify-between items-baseline mb-3">
                 <span className="text-white font-semibold text-sm">Total</span>
                 <span className="text-amber-400 text-xl font-bold">
@@ -837,14 +843,14 @@ export default function Checkout() {
                 </span>
               </div>
 
-              <p className="text-gray-600 text-[10px] text-center mb-3 leading-tight">
+              <p className="text-gray-600 text-[10px] text-center mb-3 leading-relaxed">
                 ≈ ₹{(total * 83).toFixed(0)} INR · charged in INR via Razorpay
               </p>
 
               <div className="flex items-center justify-center gap-1.5 text-gray-600 text-xs">
                 <svg
-                  width="11"
-                  height="11"
+                  width="10"
+                  height="10"
                   fill="none"
                   stroke="currentColor"
                   strokeWidth="1.8"
@@ -856,6 +862,7 @@ export default function Checkout() {
               </div>
             </div>
 
+            {/* Step counter */}
             <div className="mt-3 bg-white rounded-xl p-3 border border-gray-100 text-xs text-gray-500 text-center">
               Step {step + 1} of {STEPS.length} — {STEPS[step]}
             </div>

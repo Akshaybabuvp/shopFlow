@@ -1,0 +1,4 @@
+# Netlify _redirects — put this in /public/_redirects
+# Problem 3 fix: any URL → index.html (200, not 301)
+# This means /cart, /checkout etc never 404 on refresh
+/*    /index.html   200

@@ -1,3 +1,4 @@
+// src/pages/Cart.jsx — COMPLETE FILE — replace entirely
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -49,7 +50,7 @@ export default function Cart() {
       setPromoApplied(true);
       setPromoError('');
     } else {
-      setPromoError('Invalid promo code. Try SHOPFLOW10');
+      setPromoError('Invalid code. Try SHOPFLOW10');
       setPromoApplied(false);
     }
   }
@@ -57,6 +58,7 @@ export default function Cart() {
   const promoDiscount = promoApplied ? subtotal * 0.1 : 0;
   const finalTotal = total - promoDiscount;
 
+  // ── Empty cart ─────────────────────────────────────────
   if (items.length === 0) {
     return (
       <div className="min-h-[80vh] flex flex-col items-center justify-center bg-[#faf9f6] px-4 text-center">
@@ -70,8 +72,7 @@ export default function Cart() {
             Your cart is empty
           </h2>
           <p className="text-gray-500 mb-7 max-w-xs text-sm">
-            Looks like you haven't added anything yet. Discover our curated
-            collection.
+            Looks like you haven't added anything yet.
           </p>
           <Link
             to="/products"
@@ -84,6 +85,7 @@ export default function Cart() {
     );
   }
 
+  // ── Filled cart ────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#faf9f6] overflow-x-hidden">
       {/* Header */}
@@ -102,8 +104,9 @@ export default function Cart() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 md:py-10">
+        {/* Stack on mobile, side-by-side on lg+ */}
         <div className="flex flex-col lg:grid lg:grid-cols-[1fr_340px] gap-6 lg:gap-10 items-start">
-          {/* ── Left: Cart items ── */}
+          {/* ── LEFT: Items ── */}
           <div className="w-full min-w-0">
             <div className="flex items-center justify-between mb-5">
               <Link
@@ -135,7 +138,7 @@ export default function Cart() {
                     transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                     className="flex gap-3 bg-white rounded-2xl p-3 sm:p-4 shadow-sm"
                   >
-                    {/* Image */}
+                    {/* Product image */}
                     <Link
                       to={`/products/${item.id}`}
                       className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-xl overflow-hidden group"
@@ -143,14 +146,14 @@ export default function Cart() {
                       <img
                         src={item.image}
                         alt={item.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-400"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     </Link>
 
-                    {/* Detail */}
+                    {/* Details */}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-1">
-                        <div className="min-w-0 flex-1">
+                        <div className="flex-1 min-w-0">
                           <p className="text-[10px] text-gray-400 uppercase tracking-widest mb-0.5">
                             {item.category}
                           </p>
@@ -172,11 +175,11 @@ export default function Cart() {
                             </div>
                           )}
                         </div>
-                        {/* Remove */}
+                        {/* Remove button */}
                         <button
                           onClick={() => removeItem(item.id, item.color)}
                           aria-label="Remove item"
-                          className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0 p-1 -mt-1"
+                          className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0 p-1"
                         >
                           <svg
                             width="15"
@@ -194,7 +197,7 @@ export default function Cart() {
                         </button>
                       </div>
 
-                      {/* Price + stepper */}
+                      {/* Qty + price row */}
                       <div className="flex items-center justify-between mt-2.5">
                         <QuantityStepper
                           value={item.qty}
@@ -221,14 +224,14 @@ export default function Cart() {
             </div>
           </div>
 
-          {/* ── Right: Order summary ── */}
+          {/* ── RIGHT: Order Summary ── */}
           <div className="w-full min-w-0 lg:sticky lg:top-24">
-            <div className="bg-[#111] rounded-2xl sm:rounded-3xl p-4 sm:p-6 text-white w-full overflow-hidden">
+            <div className="bg-[#111] rounded-2xl sm:rounded-3xl p-4 sm:p-5 text-white overflow-hidden">
               <h2 className="font-display text-xl sm:text-2xl mb-5">
                 Order Summary
               </h2>
 
-              {/* Line items */}
+              {/* Totals */}
               <div className="space-y-2.5 text-sm mb-5">
                 <div className="flex justify-between text-gray-400">
                   <span>Subtotal ({cartCount} items)</span>
@@ -254,18 +257,18 @@ export default function Cart() {
                   <motion.div
                     initial={{ opacity: 0, y: -8 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="flex justify-between text-green-400"
+                    className="flex justify-between text-green-400 text-xs"
                   >
-                    <span className="text-xs">Promo (SHOPFLOW10)</span>
+                    <span>Promo (SHOPFLOW10)</span>
                     <span>−${promoDiscount.toFixed(2)}</span>
                   </motion.div>
                 )}
               </div>
 
-              {/* Total */}
+              {/* Grand total */}
               <div className="border-t border-white/10 pt-4 mb-5">
                 <div className="flex justify-between items-baseline">
-                  <span className="text-base font-semibold">Total</span>
+                  <span className="font-semibold text-base">Total</span>
                   <motion.span
                     key={finalTotal.toFixed(2)}
                     initial={{ scale: 0.9, opacity: 0 }}
@@ -282,7 +285,7 @@ export default function Cart() {
                 )}
               </div>
 
-              {/* Promo code */}
+              {/* Promo code — KEY FIX: min-w-0 on input, flex-shrink-0 on button */}
               <div className="mb-5">
                 <div className="flex gap-2">
                   <input
@@ -333,7 +336,7 @@ export default function Cart() {
                 Proceed to Checkout →
               </motion.button>
 
-              {/* Secure badge */}
+              {/* SSL badge */}
               <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
                 <svg
                   width="11"
@@ -350,7 +353,7 @@ export default function Cart() {
             </div>
 
             {/* Payment logos */}
-            <div className="mt-3 flex items-center justify-center flex-wrap gap-2 opacity-50 px-1">
+            <div className="mt-3 flex items-center justify-center flex-wrap gap-2 opacity-50">
               {['Visa', 'MC', 'Amex', 'UPI', 'Razorpay'].map((p) => (
                 <span
                   key={p}
